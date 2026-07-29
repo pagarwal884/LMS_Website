@@ -9,4 +9,3 @@ const AddCourse = () => {
 }
 
 export default AddCourse
-<h1>Add Course</h1>
