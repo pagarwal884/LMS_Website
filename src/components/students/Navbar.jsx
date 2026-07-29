@@ -19,6 +19,8 @@ const Navbar = () => {
       <div className='hidden md:flex items-center gap-5 text-gray-500'>
 
         <div className='flex items-center gap-5'>
+         { user &&
+         <>
           <button>Become Educator</button>
 
           <span>|</span>
@@ -26,6 +28,7 @@ const Navbar = () => {
           <Link to='/my-enrollments'>
             My Enrollments
           </Link>
+          </>}
         </div>
 
         {user ? (
@@ -44,7 +47,9 @@ const Navbar = () => {
       {/* Mobile */}
       <div className='md:hidden flex items-center gap-2 sm:gap-5 text-gray-500'>
 
-        <div>
+        <div className='flex items-center gap-1 sm:gap-2 max-sm:text-xs'>
+         {user &&
+         <> 
           <button>Become Educator</button>
 
           <span>|</span>
@@ -52,6 +57,7 @@ const Navbar = () => {
           <Link to='/my-enrollments'>
             My Enrollments
           </Link>
+          </>}
         </div>
 
         {user ? (
