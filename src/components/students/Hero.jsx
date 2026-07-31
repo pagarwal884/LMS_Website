@@ -4,7 +4,7 @@ import SearchBar from './SearchBar'
 
 const Hero = () => {
   return (
-    <section className="flex flex-col items-center justify-center w-full pt-20 md:pt-36 px-6 md:px-0 text-center space-y-8 bg-gradient-to-b from-cyan-100/70 to-white">
+    <section className="flex flex-col items-center justify-center w-full pt-20 md:pt-15 px-6 md:px-0 text-center space-y-8 bg-gradient-to-b from-cyan-100/70 to-white">
 
       <h1 className="relative max-w-4xl mx-auto text-[28px] leading-[36px] md:text-[48px] md:leading-[58px] font-bold text-gray-800">
         Empower your future with courses designed to{" "}

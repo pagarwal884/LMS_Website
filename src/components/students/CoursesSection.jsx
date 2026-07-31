@@ -1,29 +1,47 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AppContext } from "../../context/AppContext";
+import CourseCard from "./CourseCard";
 
 const CoursesSection = () => {
+  const { allCourses } = useContext(AppContext);
+
   return (
-    <div className='py-16 md:px-40 px-8 text-center'>
-      <h2 className='text-3xl font-medium text-gray-800'>
-        Learn From the Best
-      </h2>
+    <section className="py-12 sm:py-16 px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+      {/* Heading */}
+      <div className="max-w-3xl mx-auto text-center">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800">
+          Learn From the Best
+        </h2>
 
-      <p className='mt-4 text-gray-600 max-w-2xl mx-auto'>
-        Explore our carefully curated collection of top-rated courses designed
-        to help you learn, grow, and achieve your goals.
-      </p>
+        <p className="mt-4 text-sm sm:text-base text-gray-600 leading-7">
+          Explore our carefully curated collection of top-rated courses designed
+          to help you learn, grow, and achieve your goals.
+        </p>
+      </div>
 
-      
+      {/* Courses */}
+      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {allCourses.slice(0, 4).map((course) => (
+          <CourseCard
+            key={course._id || course.id}
+            course={course}
+          />
+        ))}
+      </div>
 
-      <Link
-        to={'/course-list'}
-        onClick={() => scrollTo(0, 0)}
-        className='inline-block mt-8 text-gray-500 border border-gray-500/30 px-10 py-3 rounded'
-      >
-        Show all courses
-      </Link>
-    </div>
-  )
-}
+      {/* Button */}
+      <div className="flex justify-center mt-12">
+        <Link
+          to="/course-list"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="px-8 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-all duration-300"
+        >
+          Show All Courses
+        </Link>
+      </div>
+    </section>
+  );
+};
 
-export default CoursesSection
+export default CoursesSection;
