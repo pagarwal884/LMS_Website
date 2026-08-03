@@ -7,23 +7,25 @@ export const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
 
   const [allCourses, setAllCourses] = useState([]);
+  const [isEducator, setIsEducator] = useState(true);
 
+  // Fetch all courses
   const fetchAllCourses = async () => {
     setAllCourses(dummyCourses);
   };
 
-  // Calculate average rating of a course
+  // Calculate average rating
   const calculateRating = (course) => {
-    if (!course.courseRatings || course.courseRatings.length === 0) {
+    if (!course?.courseRatings?.length) {
       return 0;
     }
 
-    const totalRating = course.courseRatings.reduce(
-      (sum, rating) => sum + rating.rating,
+    const total = course.courseRatings.reduce(
+      (sum, item) => sum + item.rating,
       0
     );
 
-    return totalRating / course.courseRatings.length;
+    return total / course.courseRatings.length;
   };
 
   useEffect(() => {
@@ -33,7 +35,10 @@ export const AppContextProvider = ({ children }) => {
   const value = {
     currency,
     allCourses,
+    setAllCourses,
     calculateRating,
+    isEducator,
+    setIsEducator,
   };
 
   return (
