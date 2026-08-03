@@ -4,6 +4,7 @@ import SearchBar from '../../components/students/SearchBar'
 import { AppContext } from '../../context/AppContext'
 import CourseCard from '../../components/students/CourseCard'
 import { assets } from '../../assets/assets'
+import Footer from '../../components/students/Footer'
 
 const CoursesList = () => {
 
@@ -41,11 +42,12 @@ const CoursesList = () => {
 
   return (
 
-    <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-20 pb-16">
+    <>
+      <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-20 pb-16">
 
 
-      {/* Header Section */}
-      <div className="
+        {/* Header Section */}
+        <div className="
         flex
         flex-col
         md:flex-row
@@ -57,50 +59,50 @@ const CoursesList = () => {
       ">
 
 
-        {/* Title */}
-        <div>
+          {/* Title */}
+          <div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">
-            Course List
-          </h1>
-
-
-          <p className="text-gray-500 mt-3 text-sm sm:text-base">
-
-            <span
-              className="text-blue-600 cursor-pointer hover:underline"
-              onClick={() => navigate('/')}
-            >
-              Home
-            </span>
-
-            <span className="mx-2">
-              /
-            </span>
-
-            <span>
+            <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">
               Course List
-            </span>
+            </h1>
 
-          </p>
+
+            <p className="text-gray-500 mt-3 text-sm sm:text-base">
+
+              <span
+                className="text-blue-600 cursor-pointer hover:underline"
+                onClick={() => navigate('/')}
+              >
+                Home
+              </span>
+
+              <span className="mx-2">
+                /
+              </span>
+
+              <span>
+                Course List
+              </span>
+
+            </p>
+
+          </div>
+
+
+          {/* Search */}
+          <div className="w-full md:w-xl">
+            <SearchBar data={input} />
+          </div>
+
 
         </div>
 
 
-        {/* Search */}
-        <div className="w-full md:w-auto">
-          <SearchBar data={input} />
-        </div>
+        {/* Active Search Filter */}
+        {
+          input && (
 
-
-      </div>
-
-
-      {/* Active Search Filter */}
-      {
-        input && (
-
-          <div className="
+            <div className="
             mt-8
             inline-flex
             items-center
@@ -114,82 +116,84 @@ const CoursesList = () => {
             text-gray-700
           ">
 
-            <p className="text-sm font-medium">
-              {input}
-            </p>
+              <p className="text-sm font-medium">
+                {input}
+              </p>
 
 
-            <img
-              src={assets.cross_icon}
-              alt="clear search"
-              className="
+              <img
+                src={assets.cross_icon}
+                alt="clear search"
+                className="
                 w-4
                 h-4
                 cursor-pointer
                 hover:scale-110
                 transition
               "
-              onClick={() => navigate('/course-list')}
-            />
+                onClick={() => navigate('/course-list')}
+              />
 
-          </div>
+            </div>
 
-        )
-      }
+          )
+        }
 
 
 
-      {/* Course Grid */}
-      <div
-        className="
+        {/* Course Grid */}
+        <div
+          className="
           mt-12
           grid
           grid-cols-1
           sm:grid-cols-2
           lg:grid-cols-3
           xl:grid-cols-4
-          gap-x-6
-          gap-y-10
+          gap-x-3
+          gap-y-5
         "
-      >
+        >
 
+          {
+            filterCourse.map((course) => (
+
+              <CourseCard
+                key={course._id}
+                course={course}
+              />
+
+            ))
+          }
+
+        </div>
+
+
+
+        {/* No Course Found */}
         {
-          filterCourse.map((course) => (
+          filterCourse.length === 0 && (
 
-            <CourseCard
-              key={course._id}
-              course={course}
-            />
+            <div className="text-center py-20">
 
-          ))
+              <h2 className="text-xl font-semibold text-gray-700">
+                No courses found
+              </h2>
+
+              <p className="text-gray-500 mt-2">
+                Try searching with a different keyword.
+              </p>
+
+            </div>
+
+          )
         }
+
 
       </div>
 
-
-
-      {/* No Course Found */}
-      {
-        filterCourse.length === 0 && (
-
-          <div className="text-center py-20">
-
-            <h2 className="text-xl font-semibold text-gray-700">
-              No courses found
-            </h2>
-
-            <p className="text-gray-500 mt-2">
-              Try searching with a different keyword.
-            </p>
-
-          </div>
-
-        )
-      }
-
-
-    </div>
-
+      <Footer />
+    </>
   )
 }
 
