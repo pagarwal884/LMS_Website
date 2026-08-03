@@ -23,7 +23,7 @@ const CourseCard = ({ course }) => {
       <img
         src={course.courseThumbnail}
         alt={course.courseTitle}
-        className="w-full h-48 object-cover"
+        className="w-full aspect-video object-contain bg-gray-100"
       />
 
       {/* Course Details */}
