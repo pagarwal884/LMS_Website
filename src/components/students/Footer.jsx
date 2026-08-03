@@ -3,7 +3,7 @@ import { assets } from '../../assets/assets'
 const Footer = () => {
   return (
     <footer className="bg-[#0F1722] text-gray-300 mt-20">
-      <div className="max-w-6xl mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-12 w-full">
+      <div className="w-full mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-12 ">
 
         {/* Left */}
         <div>

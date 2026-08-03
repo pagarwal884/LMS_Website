@@ -37,7 +37,7 @@ const isEducatorRoute = useMatch('/educator/*')
           <Route path="student-enrolled" element={<StudentEnrolled />}/>
         </Route>
       </Routes>
-      <Footer />
+      
     </div>
   )
 }
