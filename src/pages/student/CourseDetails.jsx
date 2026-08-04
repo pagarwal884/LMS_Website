@@ -5,6 +5,7 @@ import Loading from "../../components/students/Loading";
 import { assets } from "../../assets/assets";
 import humanizeDuration from "humanize-duration";
 import { useUser } from "@clerk/clerk-react";
+import YouTube from "react-youtube";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -22,6 +23,7 @@ const CourseDetails = () => {
   const [courseData, setCourseData] = useState(null);
   const [openSections, setOpenSections] = useState({});
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
+  const [playerData, setPlayerData] = useState(null);
 
   // Find the course from allCourses
   useEffect(() => {
@@ -45,6 +47,15 @@ const CourseDetails = () => {
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  // Extract the YouTube video ID from a full URL (handles youtu.be and youtube.com formats)
+  const getYoutubeId = (url) => {
+    if (!url) return null;
+    const match = url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^?&]+)/
+    );
+    return match ? match[1] : null;
   };
 
   if (!courseData) {
@@ -183,7 +194,14 @@ const CourseDetails = () => {
                                 </p>
                                 <div className="flex items-center gap-3 text-xs text-gray-500">
                                   {lecture.isPreviewFree && (
-                                    <span className="text-blue-600 font-medium cursor-pointer hover:underline">
+                                    <span
+                                      onClick={() =>
+                                        setPlayerData({
+                                          videoId: getYoutubeId(lecture.lectureUrl),
+                                        })
+                                      }
+                                      className="text-blue-600 font-medium cursor-pointer hover:underline"
+                                    >
                                       Preview
                                     </span>
                                   )}
@@ -209,12 +227,19 @@ const CourseDetails = () => {
 
         {/* ================= Right Section ================= */}
         <div className="w-full lg:w-[380px] bg-white rounded-2xl shadow-xl overflow-hidden sticky top-24">
-          {/* Thumbnail */}
-          <img
-            src={courseData.courseThumbnail}
-            alt={courseData.courseTitle}
-            className="w-full aspect-video object-cover"
-          />
+          {playerData ? (
+            <YouTube
+              videoId={playerData.videoId}
+              opts={{ playerVars: { autoplay: 1 } }}
+              iframeClassName="w-full aspect-video"
+            />
+          ) : (
+            <img
+              src={courseData.courseThumbnail}
+              alt={courseData.courseTitle}
+              className="w-full aspect-video object-cover"
+            />
+          )}
 
           {/* Card Content */}
           <div className="p-6">
