@@ -17,34 +17,42 @@ const CourseCard = ({ course }) => {
     <Link
       to={`/course/${course._id}`}
       onClick={() => window.scrollTo(0, 0)}
-      className="border border-gray-500/30 rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300"
+      className="group bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
-      {/* Course Thumbnail */}
-      <img
-        src={course.courseThumbnail}
-        alt={course.courseTitle}
-        className="w-full aspect-video object-contain bg-gray-100"
-      />
+      {/* Thumbnail */}
+      <div className="relative overflow-hidden">
+        <img
+          src={course.courseThumbnail}
+          alt={course.courseTitle}
+          className="w-full aspect-video object-contain bg-gray-100 group-hover:scale-105 transition-transform duration-500"
+        />
 
-      {/* Course Details */}
-      <div className="p-4">
-        {/* Course Title */}
-        <h3 className="text-base font-semibold text-gray-800 line-clamp-2">
+        {course.discount > 0 && (
+          <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+            {course.discount}% OFF
+          </span>
+        )}
+      </div>
+
+      {/* Details */}
+      <div className="p-4 flex flex-col items-start text-left">
+        {/* Title */}
+        <h3 className="w-full text-lg font-semibold text-gray-900 line-clamp-2 leading-7">
           {course.courseTitle}
         </h3>
 
         {/* Educator */}
-        <p className="mt-1 text-sm text-gray-500">
-          {course.educator.name}
+        <p className="mt-2 text-sm text-gray-500">
+          By <span className="font-medium text-gray-700">Piyush Agarwal</span>
         </p>
 
         {/* Rating */}
-        <div className="flex items-center gap-2 mt-2">
-          <p className="text-sm font-medium text-gray-700">
+        <div className="mt-3 flex items-center gap-2">
+          <span className="text-sm font-semibold text-yellow-600">
             {rating.toFixed(1)}
-          </p>
+          </span>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-0.5">
             {[...Array(5)].map((_, i) => (
               <img
                 key={i}
@@ -59,23 +67,23 @@ const CourseCard = ({ course }) => {
             ))}
           </div>
 
-          <p className="text-sm text-gray-500">
+          <span className="text-sm text-gray-500">
             ({course.courseRatings?.length || 0})
-          </p>
+          </span>
         </div>
 
         {/* Price */}
-        <div className="mt-3 flex items-center gap-2">
-          <p className="text-lg font-bold text-gray-800">
+        <div className="mt-4 flex items-center gap-3">
+          <span className="text-2xl font-bold text-gray-900">
             {currency}
             {discountedPrice}
-          </p>
+          </span>
 
           {course.discount > 0 && (
-            <p className="text-sm text-gray-400 line-through">
+            <span className="text-sm text-gray-400 line-through">
               {currency}
-              {course.coursePrice.length}
-            </p>
+              {course.coursePrice}
+            </span>
           )}
         </div>
       </div>
