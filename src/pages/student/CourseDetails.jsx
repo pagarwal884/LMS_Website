@@ -2,13 +2,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import Loading from "../../components/students/Loading";
+import { assets } from "../../assets/assets";
+
 
 const CourseDetails = () => {
   const { id } = useParams();
 
-  const { allCourses } = useContext(AppContext);
+
+  const { allCourses, calculateRating } = useContext(AppContext);
+
 
   const [courseData, setCourseData] = useState(null);
+
+  const rating = calculateRating(courseData);
 
   const fetchCourseData = () => {
     const findCourse = allCourses.find((course) => course._id === id);
@@ -43,12 +49,39 @@ const CourseDetails = () => {
           <div
             className="mt-6 text-gray-700 leading-8 space-y-4"
             dangerouslySetInnerHTML={{
-              __html: courseData.courseDescription,
+              __html: courseData.courseDescription.slice(0,200)
             }}
           />
 
-          {/* review and ratings */}
-          
+          {/* Reviews & Ratings */}
+          <div className="mt-6 flex items-center gap-3 pt-3 pb-1 text-sm">
+            <span className="text-lg font-semibold text-amber-600">
+              {rating.toFixed(1)}
+            </span>
+
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <img
+                  key={i}
+                  src={i < Math.floor(rating) ? assets.star : assets.star_blank}
+                  alt="star"
+                  className="w-5 h-5"
+                />
+              ))}
+            </div>
+
+            <span className="text-gray-600 text-sm">
+              ({courseData.courseRatings?.length >1 ? 'Ratings' : 'Rating'})
+            </span>
+
+            <p className="text-blue-600">
+              ({courseData.enrolledStudents.length} {courseData.enrolledStudents.length > 1 ? 'students' : 'student'})
+            </p>
+          </div>
+
+          <p className="text-sm">
+            Course by:<span className="text-blue-600 underline">Piyush Agarwal</span> 
+          </p>
         </div>
 
         {/* Right Section */}
