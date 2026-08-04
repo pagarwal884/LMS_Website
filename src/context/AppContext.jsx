@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { dummyCourses } from "../assets/assets";
+import humanizeDuration from "humanize-duration";
 
 export const AppContext = createContext();
 
@@ -14,7 +15,13 @@ export const AppContextProvider = ({ children }) => {
     setAllCourses(dummyCourses);
   };
 
-  // Calculate average rating
+  useEffect(() => {
+    fetchAllCourses();
+  }, []);
+
+  // ==========================
+  // Calculate Average Rating
+  // ==========================
   const calculateRating = (course) => {
     if (!course?.courseRatings?.length) {
       return 0;
@@ -28,15 +35,61 @@ export const AppContextProvider = ({ children }) => {
     return total / course.courseRatings.length;
   };
 
-  useEffect(() => {
-    fetchAllCourses();
-  }, []);
+  // ==========================
+  // Calculate Chapter Duration
+  // ==========================
+  const calculateChapterTime = (chapter) => {
+    let time = 0;
+
+    chapter.chapterContent.forEach((lecture) => {
+      time += lecture.lectureDuration;
+    });
+
+    return humanizeDuration(time * 60 * 1000, {
+      units: ["h", "m"],
+      round: true,
+    });
+  };
+
+  // ==========================
+  // Calculate Total Course Duration
+  // ==========================
+  const calculateCourseDuration = (course) => {
+    let time = 0;
+
+    course.courseContent.forEach((chapter) => {
+      chapter.chapterContent.forEach((lecture) => {
+        time += lecture.lectureDuration;
+      });
+    });
+
+    return humanizeDuration(time * 60 * 1000, {
+      units: ["h", "m"],
+      round: true,
+    });
+  };
+
+  // Function to Calculate Total Number of Lectures
+  const calculateNoofLectures = (course) => {
+    let totalLectures = 0;
+
+    course.courseContent.forEach((chapter) => {
+      if (Array.isArray(chapter.chapterContent)) {
+        totalLectures += chapter.chapterContent.length;
+      }
+    });
+
+    return totalLectures;
+  };
 
   const value = {
     currency,
     allCourses,
     setAllCourses,
     calculateRating,
+    calculateChapterTime,
+    calculateCourseDuration,
+    calculateNoofLectures,
     isEducator,
     setIsEducator,
   };
