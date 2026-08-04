@@ -4,9 +4,11 @@ import { AppContext } from "../../context/AppContext";
 import Loading from "../../components/students/Loading";
 import { assets } from "../../assets/assets";
 import humanizeDuration from "humanize-duration";
+import { useUser } from "@clerk/clerk-react";
 
 const CourseDetails = () => {
   const { id } = useParams();
+  const { user } = useUser();
 
   const {
     allCourses,
@@ -19,13 +21,24 @@ const CourseDetails = () => {
 
   const [courseData, setCourseData] = useState(null);
   const [openSections, setOpenSections] = useState({});
+  const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
 
+  // Find the course from allCourses
   useEffect(() => {
     if (allCourses.length > 0) {
       const findCourse = allCourses.find((course) => course._id === id);
       setCourseData(findCourse);
     }
   }, [id, allCourses]);
+
+  // Check enrollment once courseData and user are available
+  useEffect(() => {
+    if (courseData && user) {
+      setIsAlreadyEnrolled(
+        courseData.enrolledStudents.includes(user.id)
+      );
+    }
+  }, [courseData, user]);
 
   const toggleSection = (index) => {
     setOpenSections((prev) => ({
@@ -195,8 +208,86 @@ const CourseDetails = () => {
         </div>
 
         {/* ================= Right Section ================= */}
-        <div>
-          
+        <div className="w-full lg:w-[380px] bg-white rounded-2xl shadow-xl overflow-hidden sticky top-24">
+          {/* Thumbnail */}
+          <img
+            src={courseData.courseThumbnail}
+            alt={courseData.courseTitle}
+            className="w-full aspect-video object-cover"
+          />
+
+          {/* Card Content */}
+          <div className="p-6">
+            {/* Price */}
+            <div className="flex items-center gap-3">
+              <span className="text-3xl font-bold text-gray-900">
+                {currency}
+                {discountedPrice}
+              </span>
+
+              {courseData.discount > 0 && (
+                <>
+                  <span className="text-lg text-gray-400 line-through">
+                    {currency}
+                    {courseData.coursePrice}
+                  </span>
+
+                  <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
+                    {courseData.discount}% OFF
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Enroll Button */}
+            <button
+              disabled={isAlreadyEnrolled}
+              className={`w-full mt-6 font-semibold py-3 rounded-lg transition duration-300 ${
+                isAlreadyEnrolled
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
+            >
+              {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
+            </button>
+
+            {/* Includes */}
+            <div className="mt-8">
+              <h3 className="font-semibold text-lg text-gray-900 mb-4">
+                This course includes:
+              </h3>
+
+              <div className="space-y-3 text-sm text-gray-600">
+                <div className="flex items-center gap-3">
+                  <img src={assets.time_clock_icon} alt="" className="w-5" />
+                  <span>Lifetime Access</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <img src={assets.lesson_icon} alt="" className="w-5" />
+                  <span>
+                    {courseData.courseContent.length} Chapters,{" "}
+                    {calculateNoofLectures(courseData)} Lectures
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <img src={assets.time_left_clock_icon} alt="" className="w-5" />
+                  <span>{calculateCourseDuration(courseData)} of content</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <img src={assets.star} alt="" className="w-5" />
+                  <span>Certificate of Completion</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <img src={assets.user_icon} alt="" className="w-5" />
+                  <span>Access on Mobile & Desktop</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
